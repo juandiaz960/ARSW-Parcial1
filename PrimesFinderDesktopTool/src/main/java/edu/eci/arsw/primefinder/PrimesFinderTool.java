@@ -2,28 +2,29 @@ package edu.eci.arsw.primefinder;
 
 import edu.eci.arsw.mouseutils.MouseMovementMonitor;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * 
+ * @author Juan Sebastián Díaz
+ */
 
 public class PrimesFinderTool {
 
-    public static List<PrimeThread> primeThreadList;
+    public static CopyOnWriteArrayList<PrimeThread> primeThreadList;
     public static int threadsNumber;
     public static int minValue;
     public static int maxValue;
     public static int threadJumps;
 
     public static void main(String[] args) {
-
-        int maxPrim = 1000;
-        int finished = 0;
-        threadsNumber = 4;
-        minValue = 0;
-        threadJumps = maxPrim / threadsNumber;
+        
         primeThreadList = new CopyOnWriteArrayList<>();
+        threadsNumber = 4;
+        int maxPrim = 100; int finished = 0;        
+        minValue = 0;
+        threadJumps = maxPrim / threadsNumber;        
 
         for (int i = 0; i < threadsNumber; i++) {
             minValue = maxValue;
@@ -47,14 +48,15 @@ public class PrimesFinderTool {
                 System.out.println("Prime Search Ended");
             } else {
                 try {
-                    //check every 10ms if the idle status (10 seconds without mouse activity) was reached
+                    //check every 1000ms if the idle status (10 seconds without mouse activity) was reached
                     if (MouseMovementMonitor.getInstance().getTimeSinceLastMouseMovement() > 10000) {
-                        Thread.sleep(10);
+                        Thread.sleep(1000);
                         for (PrimeThread primeThread : primeThreadList) {
                             primeThread.pauseThread(true);
                         }
                         System.out.println("Idle CPU ");
                     } else {
+                        Thread.sleep(1000);
                         for (PrimeThread primeThread : primeThreadList) {
                             primeThread.resumeThread(false);
                         }
